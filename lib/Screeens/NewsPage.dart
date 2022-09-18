@@ -98,7 +98,7 @@ class _NewsPageState extends State<NewsPage>  with TickerProviderStateMixin{
                       ),
                       Row(
                         children: [
-                          Icon(Icons.arrow_upward_outlined),
+                          ImageIcon(AssetImage("assets/upArrow.png",),color: Colors.green,size: 32,),
                           Container(
                             margin: EdgeInsets.all(5),
                             child: Column(
@@ -170,7 +170,7 @@ class _NewsPageState extends State<NewsPage>  with TickerProviderStateMixin{
                       children: [
                         ResearchPage(),
                         Reactions(comments: news.currNews?.comments??[],),
-                        RelatedPage(related: news.news)
+                        RelatedPage(related: news.news.where((element) => element.title!=news.currNews!.title).toList())
                       ]),
                 )
 

@@ -69,11 +69,13 @@ class _HomePageState extends State<HomePage> {
 
     News n1=News(icon:"assets/news1.png",title:"Liz Truss will be UK’s next Prime Minister?");
     News n2=News(icon:"assets/news2.png",title:"British Pound will fall after Prime Minister elections?");
+    News n3=News(icon:"assets/news3.png",title:"British Railway Strikes will end by before Sept. 2022?");
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       Provider.of<NewsProvider>(context,listen: false).addnews(n);
       Provider.of<NewsProvider>(context,listen: false).addnews(n1);
       Provider.of<NewsProvider>(context,listen: false).addnews(n2);
+      Provider.of<NewsProvider>(context,listen: false).addnews(n3);
 
       Provider.of<NewsProvider>(context,listen: false).changeNews(0);
 
@@ -116,7 +118,7 @@ class _HomePageState extends State<HomePage> {
                     Column(
                       children: [
                         Text(
-                          "Reactions",
+                          x.isRelated?"Related":"Reactions",
                           style: TextStyle(fontSize: 25, color: Colors.grey),
                         ),
 
@@ -303,35 +305,45 @@ class RelatedSlideUpPage extends StatefulWidget {
 }
 
 class _RelatedSlideUpPageState extends State<RelatedSlideUpPage> {
+
   @override
   Widget build(BuildContext context) {
-    return Consumer<NewsProvider>(builder: (_,news,__)=> Expanded(
-      
+    return Consumer<NewsProvider>(builder: (_,news,__) {
+      List<News> related=news.news.where((element) => element.title!=news.currNews!.title).toList();
+      return Expanded(
+
         child: ListView.builder(
-            itemCount: news.news.length,
-            itemBuilder: (context,key)=>Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(25),
+            itemCount: related.length,
+            itemBuilder: (context, key) =>
+                Container(
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(25),
 
-                color: Colors.white24,
-                border: Border.all(color: Colors.black26)
-              ),
-              clipBehavior: Clip.antiAlias,
-              margin: EdgeInsets.fromLTRB(7, 5, 7, 5),
-          child: Row(
+                      color: Colors.white24,
+                      border: Border.all(color: Colors.black26)
+                  ),
+                  clipBehavior: Clip.antiAlias,
+                  margin: EdgeInsets.fromLTRB(7, 5, 7, 5),
+                  child: Row(
 
-            children: [
-              Image(image: AssetImage(news.news[key].icon),height:75,width: 75,fit: BoxFit.fill,),
-              Container(
+                    children: [
+                      Image(image: AssetImage(related[key].icon),
+                        height: 75,
+                        width: 75,
+                        fit: BoxFit.fill,),
+                      Container(
 
-                padding: EdgeInsets.all(10),
-                width: 275,
-                    child: Text(news.news[key].title,style: TextStyle(fontSize: 18),)),
+                          padding: EdgeInsets.all(10),
+                          width: 275,
+                          child: Text(related[key].title,
+                            style: TextStyle(fontSize: 18),)),
 
-            ],
-          ),
-        )),
-      ),
+                    ],
+                  ),
+                )),
+      );
+
+    }
     );
   }
 }
