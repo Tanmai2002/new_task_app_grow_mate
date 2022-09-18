@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:new_task_app/Screeens/HomePage.dart';
+import 'package:new_task_app/providers/NewsProvider.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   runApp(const MyApp());
@@ -26,7 +28,9 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
 
-      home: HomePage(),
+      home: ChangeNotifierProvider(
+          create: (context)=>NewsProvider(),
+          child: HomePage()),
     );
   }
 }

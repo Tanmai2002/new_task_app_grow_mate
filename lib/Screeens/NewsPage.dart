@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:new_task_app/Screeens/HomePage.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 class NewsPage extends StatefulWidget {
   const NewsPage({Key? key}) : super(key: key);
@@ -141,30 +142,7 @@ class Reactions extends StatefulWidget {
 
 class _ReactionsState extends State<Reactions> {
 
-  List<Map> comments=[
-    {
-      "name":"Prof.alison",
-      "comment":"""If China does indeed attack Taiwan soon, October is the likely time since the Taiwan Strait waters will be
-calm, facilitating amphibious operations.
-The drills around Taiwan allowed China to build up
-forces in Fujian, which is part of what's needed
-before an invasion.
-      """,
-      "icon":""
-
-    }
-
-    ,
-
-    {
-      "name":"Prof.alison",
-      "comment":"""If China does indeed attack Taiwan soon, October is the likely time since the Taiwan Strait waters will be calm, facilitating amphibious operations. The drills around Taiwan allowed China to build up forces in Fujian, which is part of what's needed
-before an invasion.
-      """,
-      "icon":""
-
-    }
-  ];
+  List<Map> comments=[];
   @override
   void initState() {
     // TODO: implement initState
@@ -175,6 +153,7 @@ before an invasion.
     return InkWell(
       onTap: (){
         // _panelController.open();
+        HomePage.panelController.open();
       },
       child: Column(
         children: [
