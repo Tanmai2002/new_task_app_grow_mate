@@ -23,6 +23,28 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     // TODO: implement initState
     News n=News();
+    n.buyYes=12;
+    n.buyNo=87;
+    n.experts=215;
+    n.updates=[
+      {
+        "title":"BBC",
+        "content":"Most people the BBC spoke to do not believe China is about to attack Taiwan. \"They're a bunch of gangsters,\" said one man fishing on the...",
+        "date":"1 Sept"
+      },
+
+      {
+        "title":"BBC",
+        "content":"Most people the BBC spoke to do not believe China is about to attack Taiwan. \"They're a bunch of gangsters,\" said one man fishing on the...",
+        "date":"1 Sept"
+      },
+
+      {
+        "title":"BBC",
+        "content":"Most people the BBC spoke to do not believe China is about to attack Taiwan. \"They're a bunch of gangsters,\" said one man fishing on the...",
+        "date":"1 Sept"
+      }
+    ];
     n.comments=[
       {
         "name":"Prof.xyz",
@@ -57,7 +79,7 @@ class _HomePageState extends State<HomePage> {
         }
        return SlidingUpPanel(
       controller: HomePage.panelController,
-      minHeight: 410,
+      minHeight: 0,
       maxHeight: 410,
       borderRadius: radius,
       panel: ClipRRect(
@@ -136,8 +158,18 @@ class _HomePageState extends State<HomePage> {
       body: Scaffold(
         body: NewsPage(),
         bottomNavigationBar: BottomNavigationBar(
+
+          showUnselectedLabels: false,
+          showSelectedLabels: false,
+          selectedIconTheme: IconThemeData(color: Colors.white),
+          unselectedIconTheme: IconThemeData(color: Color.fromARGB(
+              255, 95, 95, 95)),
+          selectedItemColor: Colors.purpleAccent,
           items: [
-            BottomNavigationBarItem(icon: Icon(Icons.home), label: "home"),
+            BottomNavigationBarItem(icon: Container(
+                decoration: BoxDecoration(color: Colors.purpleAccent,borderRadius:BorderRadius.horizontal(left: Radius.circular(25),right: Radius.circular(25)) ),
+                padding: EdgeInsets.fromLTRB(15, 5, 15, 5),
+                child: ImageIcon(AssetImage("assets/calculator.png"))), label: "home",),
             BottomNavigationBarItem(icon: Icon(Icons.home), label: "r"),
             BottomNavigationBarItem(icon: Icon(Icons.home), label: "hii"),
             BottomNavigationBarItem(icon: Icon(Icons.home), label: "hello"),

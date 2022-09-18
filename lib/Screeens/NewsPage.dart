@@ -1,5 +1,12 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:new_task_app/Model/News.dart';
 import 'package:new_task_app/Screeens/HomePage.dart';
+import 'package:new_task_app/providers/NewsProvider.dart';
+import 'package:percent_indicator/linear_percent_indicator.dart';
+import 'package:provider/provider.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 class NewsPage extends StatefulWidget {
   const NewsPage({Key? key}) : super(key: key);
@@ -23,27 +30,27 @@ class _NewsPageState extends State<NewsPage>  with TickerProviderStateMixin{
   }
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Container(
-          child: Column(
-            children: [
-              Container(
-                child: Image(image: AssetImage("assets/img.png"),fit: BoxFit.fill,height: 275,width: double.maxFinite,),
+    return
+        Consumer<NewsProvider>(
+          builder: (_,news,__){
+            return Column(
+              children: [
+                Container(
+                  child: Image(image: AssetImage("assets/img.png"),fit: BoxFit.fill,height: 275,width: double.maxFinite,),
 
-              ),
-              Container(
-                height: 80,
+                ),
+                Container(
+                  height: 73,
 
-                decoration: BoxDecoration(gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
+                  decoration: BoxDecoration(gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
 
-                    Color.fromARGB(255, 46, 32, 219),
-                    Color.fromARGB(255, 228, 50, 193),
-                  ]
-                ),borderRadius: BorderRadius.vertical(bottom: Radius.elliptical(15, 7))),
+                        Color.fromARGB(255, 46, 32, 219),
+                        Color.fromARGB(255, 228, 50, 193),
+                      ]
+                  ),borderRadius: BorderRadius.vertical(bottom: Radius.elliptical(15, 7))),
 
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -52,7 +59,7 @@ class _NewsPageState extends State<NewsPage>  with TickerProviderStateMixin{
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text("CHANCE",style: TextStyle(color:Colors.white),),
-                          Text("11%",style: TextStyle(color:Colors.white,fontSize: 25,fontWeight: FontWeight.bold),)
+                          Text("11%",style: GoogleFonts.montserratAlternates(color:Colors.white,fontSize: 25,fontWeight: FontWeight.bold),)
                         ],
                       ),
                       Row(
@@ -93,40 +100,39 @@ class _NewsPageState extends State<NewsPage>  with TickerProviderStateMixin{
 
                   ),
 
-              ),
-              TabBar(
-                unselectedLabelColor: Colors.grey,
-                  labelColor: Colors.pink,
-                  indicatorSize: TabBarIndicatorSize.label,
-                  labelPadding: EdgeInsets.zero,
-                  indicatorColor: Colors.pink,
-                  indicatorPadding: EdgeInsets.zero,
-                  controller: _tabController,
-
-                  tabs: [
-                    Tab(child: Text("Research & News"),),
-                    Tab(child: Text("Reactions"),),
-                    Tab(child: Text("Related"),),
-
-                  ]),
-
-              SizedBox(
-                height: 200,
-                child: TabBarView(
-
+                ),
+                TabBar(
+                    unselectedLabelColor: Colors.grey,
+                    labelColor: Colors.pink,
+                    indicatorSize: TabBarIndicatorSize.label,
+                    labelPadding: EdgeInsets.zero,
+                    indicatorColor: Colors.pink,
+                    indicatorPadding: EdgeInsets.zero,
                     controller: _tabController,
-                    children: [
-                      Text("Research"),
-                      Reactions(),
-                      Text("Related")
+
+                    tabs: [
+                      Tab(child: Text("Research & News"),),
+                      Tab(child: Text("Reactions"),),
+                      Tab(child: Text("Related"),),
+
                     ]),
-              )
 
-            ],
-          ),
-        ),
+                SizedBox(
+                  height: 220,
+                  child: TabBarView(
 
-      ],
+                      controller: _tabController,
+                      children: [
+                        ResearchPage(),
+                        Reactions(comments: news.currNews?.comments??[],),
+                        Text("Related")
+                      ]),
+                )
+
+              ],
+            );
+          },
+
 
     );
   }
@@ -134,7 +140,8 @@ class _NewsPageState extends State<NewsPage>  with TickerProviderStateMixin{
 
 
 class Reactions extends StatefulWidget {
-  const Reactions({Key? key}) : super(key: key);
+  Reactions({required this.comments,Key? key}) : super(key: key);
+  List<Map> comments;
 
   @override
   State<Reactions> createState() => _ReactionsState();
@@ -142,7 +149,6 @@ class Reactions extends StatefulWidget {
 
 class _ReactionsState extends State<Reactions> {
 
-  List<Map> comments=[];
   @override
   void initState() {
     // TODO: implement initState
@@ -180,7 +186,7 @@ class _ReactionsState extends State<Reactions> {
               child: ListView.builder(
                   padding: EdgeInsets.zero,
 
-                itemCount: 2,
+                itemCount: max(2,widget.comments.length),
                 itemBuilder: (context,key)=>ListTile(
 
                   leading: ClipOval(
@@ -196,8 +202,8 @@ class _ReactionsState extends State<Reactions> {
                         ),
 
                       children: [
-                        TextSpan(text: comments[key]["name"]+" ",style: TextStyle(fontWeight: FontWeight.bold)),
-                        TextSpan(text: comments[key]["comment"],style: TextStyle(fontSize: 13)),
+                        TextSpan(text: widget.comments[key]["name"]+" ",style: TextStyle(fontWeight: FontWeight.bold)),
+                        TextSpan(text: widget.comments[key]["comment"],style: TextStyle(fontSize: 13)),
 
                       ]
                     ),
@@ -223,5 +229,115 @@ class _ReactionsState extends State<Reactions> {
     );
   }
 }
+
+
+class ResearchPage extends StatelessWidget {
+  const ResearchPage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<NewsProvider>(builder: (_,news,__)=>Container(
+      padding: EdgeInsets.all(15),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text("${news.currNews?.experts??0} Expert Opinion",style: TextStyle(fontSize: 19,color: Colors.blueGrey),),
+          Row(
+            children: [
+              Stack(
+                alignment: Alignment.center,
+                children: [
+                  Container(
+                    height: 75,
+                    width: 75,
+                    decoration: BoxDecoration(color: Color.fromARGB(
+                        26, 201, 48, 197),borderRadius: BorderRadius.circular(100)),
+
+                  ),
+                  Container(
+                    height: 60,
+                    width: 60,
+                    decoration: BoxDecoration(color: Color.fromARGB(
+                        38, 201, 48, 197),borderRadius: BorderRadius.circular(100)),
+
+                  ),
+                  Text("${news.currNews?.buyYes??0} %",style: TextStyle(color: Color.fromARGB(255, 228, 50, 193)),)
+                ],
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  LinearPercentIndicator(
+                    width: 170,
+                    animation: true,
+                    lineHeight: 7.0,
+                    animationDuration: 2000,
+                    percent: (news.currNews?.buyYes??0)*1.0/100,
+                    barRadius: Radius.circular(5),
+                    progressColor: Color.fromARGB(255, 228, 50, 193),
+                    trailing: Text("${news.currNews?.buyYes??0}% Buy Yes",style: TextStyle(color: Color.fromARGB(255, 228, 50, 193))),
+                  ),
+
+                  LinearPercentIndicator(
+                    width: 170,
+                    animation: true,
+                    lineHeight: 7.0,
+                    animationDuration: 2000,
+                    percent: (news.currNews?.buyNo??00)*1.0/100,
+                    barRadius: Radius.circular(5),
+                    progressColor: Color.fromARGB(255, 104, 118, 132),
+                    trailing: Text("${news.currNews?.buyNo??0}% Buy No",style: TextStyle(color: Color.fromARGB(
+                        255, 104, 118, 132))),
+                  ),
+
+                  LinearPercentIndicator(
+                    width: 170,
+                    animation: true,
+                    lineHeight: 7.0,
+                    animationDuration: 2000,
+                    percent: (100-(news.currNews?.buyNo??0)-(news.currNews?.buyYes??0))*1.0/100,
+                    barRadius: Radius.circular(5),
+                    progressColor: Color.fromARGB(255, 104, 118, 132),
+                    trailing: Text("${100-(news.currNews?.buyNo??0)-(news.currNews?.buyYes??0)}% No Resolve",style: TextStyle(color: Color.fromARGB(
+                        255, 104, 118, 132))),
+                  ),
+                  ],
+              )
+            ],
+
+          ),
+          Expanded(
+            child: ListView.builder(
+                itemCount: Provider.of<NewsProvider>(context).currNews?.updates.length??0,
+                scrollDirection: Axis.horizontal,
+                itemBuilder: (context,key)=>Container(
+                  width: 250,
+                  child: Card(
+                    child: Column(
+                      children: [
+                        ListTile(title: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(news.currNews?.updates[key]["title"]??"",style: TextStyle(fontSize: 13,fontWeight: FontWeight.bold),),
+                            Text(news.currNews?.updates[key]["date"]??"",style: TextStyle(fontSize: 12,color: Colors.grey),),
+
+                          ],
+                        ),
+                          subtitle: Text(news.currNews?.updates[key]["content"]??"",maxLines: 4,style: TextStyle(fontSize: 12),),
+
+                        )
+                      ],
+                    ),
+                  ),
+                )),
+          )
+        ],
+      ),
+
+    ));
+  }
+}
+
 
 
