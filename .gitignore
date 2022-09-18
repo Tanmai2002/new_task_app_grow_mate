@@ -13,6 +13,8 @@ local.properties
 
 # Android Studio generated files and folders
 captures/
+.flutter-plugins-dependencies
+.flutter-plugins
 .externalNativeBuild/
 .cxx/
 *.apk

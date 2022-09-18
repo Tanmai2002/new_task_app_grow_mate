@@ -297,6 +297,7 @@ class _ReactionPageState extends State<ReactionPage> {
 }
 
 
+//Displayed the Same List 2 Times so as to show the scroll effect
 class RelatedSlideUpPage extends StatefulWidget {
   const RelatedSlideUpPage({Key? key}) : super(key: key);
 
@@ -310,10 +311,11 @@ class _RelatedSlideUpPageState extends State<RelatedSlideUpPage> {
   Widget build(BuildContext context) {
     return Consumer<NewsProvider>(builder: (_,news,__) {
       List<News> related=news.news.where((element) => element.title!=news.currNews!.title).toList();
+
       return Expanded(
 
         child: ListView.builder(
-            itemCount: related.length,
+            itemCount: related.length*2,
             itemBuilder: (context, key) =>
                 Container(
                   decoration: BoxDecoration(
@@ -327,7 +329,7 @@ class _RelatedSlideUpPageState extends State<RelatedSlideUpPage> {
                   child: Row(
 
                     children: [
-                      Image(image: AssetImage(related[key].icon),
+                      Image(image: AssetImage(related[key%3].icon),
                         height: 75,
                         width: 75,
                         fit: BoxFit.fill,),
@@ -335,7 +337,7 @@ class _RelatedSlideUpPageState extends State<RelatedSlideUpPage> {
 
                           padding: EdgeInsets.all(10),
                           width: 275,
-                          child: Text(related[key].title,
+                          child: Text(related[key%2].title,
                             style: TextStyle(fontSize: 18),)),
 
                     ],
