@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:new_task_app/Model/News.dart';
 import 'package:new_task_app/Screeens/NewsPage.dart';
@@ -26,6 +28,8 @@ class _HomePageState extends State<HomePage> {
     n.buyYes=12;
     n.buyNo=87;
     n.experts=215;
+    n.title="Will China invade Taiwan before end september? ";
+    n.icon="assets/img.png";
     n.updates=[
       {
         "title":"BBC",
@@ -60,14 +64,31 @@ class _HomePageState extends State<HomePage> {
         "time":DateTime(2022,2,4)
 
       }
+
     ];
+
+    News n1=News(icon:"assets/news1.png",title:"Liz Truss will be UK’s next Prime Minister?");
+    News n2=News(icon:"assets/news2.png",title:"British Pound will fall after Prime Minister elections?");
+
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       Provider.of<NewsProvider>(context,listen: false).addnews(n);
+      Provider.of<NewsProvider>(context,listen: false).addnews(n1);
+      Provider.of<NewsProvider>(context,listen: false).addnews(n2);
+
       Provider.of<NewsProvider>(context,listen: false).changeNews(0);
 
     });
     super.initState();
   }
+  BoxDecoration decoration=BoxDecoration(gradient: LinearGradient(
+      begin: Alignment.topCenter,
+      end: Alignment.bottomCenter,
+      colors: [
+        Colors.purpleAccent,
+        Color.fromARGB(255, 253, 159, 235)
+      ]
+
+  ),borderRadius:BorderRadius.horizontal(left: Radius.circular(25),right: Radius.circular(25)) );
 
   @override
   Widget build(BuildContext context) {
@@ -144,7 +165,8 @@ class _HomePageState extends State<HomePage> {
                   ],
                 ),
               ),
-              ReactionPage(comments:x.currNews?.comments??[])
+             Divider(color: Colors.grey,),
+             x.isRelated?RelatedSlideUpPage(): ReactionPage(comments:x.currNews?.comments??[])
 
 
 
@@ -167,12 +189,21 @@ class _HomePageState extends State<HomePage> {
           selectedItemColor: Colors.purpleAccent,
           items: [
             BottomNavigationBarItem(icon: Container(
-                decoration: BoxDecoration(color: Colors.purpleAccent,borderRadius:BorderRadius.horizontal(left: Radius.circular(25),right: Radius.circular(25)) ),
-                padding: EdgeInsets.fromLTRB(15, 5, 15, 5),
+                decoration:decoration ,
+            padding: EdgeInsets.fromLTRB(15, 5, 15, 5),
                 child: ImageIcon(AssetImage("assets/calculator.png"))), label: "home",),
-            BottomNavigationBarItem(icon: Icon(Icons.home), label: "r"),
-            BottomNavigationBarItem(icon: Icon(Icons.home), label: "hii"),
-            BottomNavigationBarItem(icon: Icon(Icons.home), label: "hello"),
+            BottomNavigationBarItem(icon: Container(
+                decoration:BoxDecoration() ,
+                padding: EdgeInsets.fromLTRB(15, 5, 15, 5),
+                child: ImageIcon(AssetImage("assets/market.png"),)), label: "growth",),
+            BottomNavigationBarItem(icon: Container(
+                decoration:BoxDecoration() ,
+                padding: EdgeInsets.fromLTRB(15, 5, 15, 5),
+                child: ImageIcon(AssetImage("assets/pie.png"),)), label: "stats",),
+            BottomNavigationBarItem(icon: Container(
+                decoration:BoxDecoration() ,
+                padding: EdgeInsets.fromLTRB(15, 5, 15, 5),
+                child: ImageIcon(AssetImage("assets/person.png"),)), label: "account",),
           ],
         ),
       ),
@@ -258,6 +289,48 @@ class _ReactionPageState extends State<ReactionPage> {
           )
 
         ],
+      ),
+    );
+  }
+}
+
+
+class RelatedSlideUpPage extends StatefulWidget {
+  const RelatedSlideUpPage({Key? key}) : super(key: key);
+
+  @override
+  State<RelatedSlideUpPage> createState() => _RelatedSlideUpPageState();
+}
+
+class _RelatedSlideUpPageState extends State<RelatedSlideUpPage> {
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<NewsProvider>(builder: (_,news,__)=> Expanded(
+      
+        child: ListView.builder(
+            itemCount: news.news.length,
+            itemBuilder: (context,key)=>Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(25),
+
+                color: Colors.white24,
+                border: Border.all(color: Colors.black26)
+              ),
+              clipBehavior: Clip.antiAlias,
+              margin: EdgeInsets.fromLTRB(7, 5, 7, 5),
+          child: Row(
+
+            children: [
+              Image(image: AssetImage(news.news[key].icon),height:75,width: 75,fit: BoxFit.fill,),
+              Container(
+
+                padding: EdgeInsets.all(10),
+                width: 275,
+                    child: Text(news.news[key].title,style: TextStyle(fontSize: 18),)),
+
+            ],
+          ),
+        )),
       ),
     );
   }

@@ -35,9 +35,43 @@ class _NewsPageState extends State<NewsPage>  with TickerProviderStateMixin{
           builder: (_,news,__){
             return Column(
               children: [
-                Container(
-                  child: Image(image: AssetImage("assets/img.png"),fit: BoxFit.fill,height: 275,width: double.maxFinite,),
 
+                Stack(
+                  children: [
+                    Image(image: AssetImage("assets/img.png"),fit: BoxFit.fill,height: 275,width: double.maxFinite,),
+
+
+                        Container(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.bottomCenter,
+                              end: Alignment.topCenter,
+                              colors: [
+                                Color.fromARGB(227, 26, 26, 26),
+
+                                Color.fromARGB(26, 17, 17, 17),
+
+                                Color.fromARGB(0, 11, 11, 11),
+
+
+                                Color.fromARGB(0, 0, 0, 0)
+                              ]
+                            )
+                          ),
+                          height: 275,
+                          padding: EdgeInsets.all(15),
+                          alignment: Alignment.bottomLeft,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Container(
+                                  width: 325,
+                                  child: Text(news.currNews!.title,style: TextStyle(fontSize: 20,color: Colors.white),)),
+                              ImageIcon(AssetImage("assets/filter.png"),size: 30,color: Colors.white,)
+                            ],
+                          )
+                        )
+                  ],
                 ),
                 Container(
                   height: 73,
@@ -109,6 +143,16 @@ class _NewsPageState extends State<NewsPage>  with TickerProviderStateMixin{
                     indicatorColor: Colors.pink,
                     indicatorPadding: EdgeInsets.zero,
                     controller: _tabController,
+                    onTap: (x){
+                      print(x);
+                      if(x==2){
+                        news.RelatedPage();
+
+                      }else{
+                        news.NotRelatedPage();
+                      }
+
+                    },
 
                     tabs: [
                       Tab(child: Text("Research & News"),),
@@ -121,11 +165,12 @@ class _NewsPageState extends State<NewsPage>  with TickerProviderStateMixin{
                   height: 220,
                   child: TabBarView(
 
+
                       controller: _tabController,
                       children: [
                         ResearchPage(),
                         Reactions(comments: news.currNews?.comments??[],),
-                        Text("Related")
+                        RelatedPage(related: news.news)
                       ]),
                 )
 
@@ -338,6 +383,42 @@ class ResearchPage extends StatelessWidget {
     ));
   }
 }
+
+
+class RelatedPage extends StatelessWidget {
+  List<News> related;
+  RelatedPage({Key? key,required this.related}) : super(key: key);
+
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: (){
+        HomePage.panelController.open();
+      },
+      child: ListView.builder(
+          itemCount: min(2,related.length),
+          itemBuilder: (context,key)=>Container(
+
+            clipBehavior: Clip.antiAlias,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(25)
+            ),
+            child: Card(
+              child: ListTile(
+                contentPadding: EdgeInsets.zero,
+
+                tileColor: Colors.white30,
+        leading: Image(image: AssetImage(related[key].icon),height: 150,),
+                title: Text(related[key].title,style: TextStyle(fontSize: 18),),
+
+      ),
+            ),
+          )),
+    );
+  }
+}
+
 
 
 
